@@ -32,8 +32,10 @@ with col1:
 with col2:
     st.metric("إجمالي الإيرادات", f"${df_monthly['total_revenue'].sum():,.2f}")
 
+# رسم الإيرادات الشهرية - مع تحسينات
 fig_revenue = px.line(df_monthly, x='month', y='total_revenue', title='الإيرادات الشهرية', markers=True)
-st.plotly_chart(fig_revenue, use_container_width=True)
+fig_revenue.update_layout(height=400, margin=dict(l=20, r=20, t=40, b=20), hovermode='x unified')
+st.plotly_chart(fig_revenue, use_container_width=True, key='chart1')
 
 st.header("🏆 أفضل فئات المنتجات")
 orders_items_products = orders_items.merge(products, on='product_id')
@@ -43,16 +45,19 @@ df_categories = delivered_products.groupby('product_category_name').agg({'order_
 df_categories.columns = ['product_category_name', 'total_sales', 'total_revenue']
 df_categories = df_categories.sort_values('total_revenue', ascending=False).head(10)
 
+# رسم الفئات - مع تحسينات
 fig_pie = px.pie(df_categories, values='total_revenue', names='product_category_name', title='توزيع الإيرادات حسب الفئة', hole=0.4)
-st.plotly_chart(fig_pie, use_container_width=True)
+fig_pie.update_layout(height=500, margin=dict(l=20, r=20, t=40, b=20))
+st.plotly_chart(fig_pie, use_container_width=True, key='chart2')
 
 st.header("🌍 توزيع العملاء حسب المدينة")
 df_cities = customers.groupby('customer_city').size().reset_index(name='customer_count')
 df_cities = df_cities.sort_values('customer_count', ascending=False).head(10)
 
+# رسم المدن - مع تحسينات
 fig_bar = px.bar(df_cities, x='customer_city', y='customer_count', title='أفضل 10 مدن', labels={'customer_city': 'المدينة', 'customer_count': 'عدد العملاء'})
-fig_bar.update_layout(xaxis_tickangle=-45)
-st.plotly_chart(fig_bar, use_container_width=True)
+fig_bar.update_layout(height=400, margin=dict(l=20, r=20, t=40, b=20), xaxis_tickangle=-45, hovermode='x unified')
+st.plotly_chart(fig_bar, use_container_width=True, key='chart3')
 
 st.markdown("---")
 st.markdown("تم التطوير بواسطة: Renad Alenazy")
